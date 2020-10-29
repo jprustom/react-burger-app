@@ -15,13 +15,17 @@ function renderBurgerIngredients(burgerIngredientsMap){
         .reduce((prevIngredientArray,curIngredientArray)=>{
             return prevIngredientArray.concat(curIngredientArray)
         })
-   
     return burgerIngredientsToDisplay;
 }
 const burger=(props)=>
         <div className={BurgerStyles.Burger}>
             <BurgerIngredient ingredientType="breadTop"/>
-            {renderBurgerIngredients(props.burgerIngredientsMap)}
+            {
+                renderBurgerIngredients(props.burgerIngredientsMap)
+                    .length===0
+                        ?<p>Please start adding ingredients</p>
+                        :renderBurgerIngredients(props.burgerIngredientsMap)
+                }
             <BurgerIngredient ingredientType="breadBottom"/>
         </div>
 

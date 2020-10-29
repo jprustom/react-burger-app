@@ -1,5 +1,7 @@
 import React, {Component} from 'react';
-import Burger from '../../components/Burger/Burger.js'
+import Burger from './Burger/Burger.js'
+import BuildControls from '../BurgerBuilder/BuildControls/BuildControls.js'
+
 class BurgerBuilder extends Component{
     state={
         burgerIngredientsMap:{
@@ -14,7 +16,7 @@ class BurgerBuilder extends Component{
         return (
             <React.Fragment>
                 <Burger burgerIngredientsMap={this.state.burgerIngredientsMap}/>
-                <p>Burger Controls</p>
+                <BuildControls/>
             </React.Fragment>
         )
     }
