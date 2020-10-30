@@ -20,12 +20,21 @@ const buildControlsMapArray=[
         ingredientType:'cheese'
     },
 ]
-const buildControlsToRender=buildControlsMapArray.map(buildControlMap=>(
-    <BuildControl ingredientLabel={buildControlMap.ingredientLabel} key={buildControlMap.ingredientLabel}/>
-))
+function renderBuildControls({addIngredient,removeIngredient,disabledLessBtnsMap}){
+    return buildControlsMapArray.map(buildControlMap=>(
+        <BuildControl 
+            ingredientLabel={buildControlMap.ingredientLabel} 
+            key={buildControlMap.ingredientLabel}
+            lessClickHandler={removeIngredient.bind(null,buildControlMap.ingredientType)}
+            moreClickHandler={addIngredient.bind(null,buildControlMap.ingredientType)}
+            disableLessBtn={disabledLessBtnsMap[buildControlMap.ingredientType]}
+
+        />
+    ))
+}
 const buildControls=(props)=>(
     <div className={BuildControlsClasses.BuildControls}>
-        {buildControlsToRender}
+        {renderBuildControls(props)}
     </div>
 );
 
