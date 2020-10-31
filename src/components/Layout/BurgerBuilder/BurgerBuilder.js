@@ -1,6 +1,8 @@
 import React, {Component} from 'react';
-import Burger from './Burger/Burger.js'
-import BuildControls from '../BurgerBuilder/BuildControls/BuildControls.js'
+import Burger from './Burger/Burger.js';
+import BuildControls from '../BurgerBuilder/BuildControls/BuildControls.js';
+import Modal from '../UI/Modal/Modal.js';
+import OrderDetails from './OrderDetails/OrderDetails.js'
 
 const INGREDIENTS_PRICES_MAP={
     salad:0.5,
@@ -16,9 +18,14 @@ class BurgerBuilder extends Component{
             cheese:0,
             meat:0
         },
-        totalPrice:0
+        totalPrice:0,
+        showOrderDetails:false
     }
-
+    orderBtnClickHandler(){
+        this.setState({
+            showOrderDetails:true
+        })
+    }
     addIngredientHandler(ingredientType){
         this.setState((prevState,props)=>{
             return {
@@ -48,18 +55,36 @@ class BurgerBuilder extends Component{
         })
         // console.log(this.state)
     }
-
-    render(){
+    getDisabledLessBtnsMap(){
         const disabledLessBtnsMap={...this.state.burgerIngredientsMap}
         for (let ingredientType in disabledLessBtnsMap)
-            disabledLessBtnsMap[ingredientType]=disabledLessBtnsMap[ingredientType]===0     
+            disabledLessBtnsMap[ingredientType]=disabledLessBtnsMap[ingredientType]===0  
+        return disabledLessBtnsMap;
+    }
+    getIngredientsTotalAmount(){
+        return Object.keys(this.state.burgerIngredientsMap)
+            .map(ingredientType=>this.state.burgerIngredientsMap[ingredientType])
+            .reduce((prevAmount,nextAmount)=>prevAmount+nextAmount)
+    }
+    cancelOrderHandler(){
+        this.setState({
+            showOrderDetails:false
+        })
+    }
+    render(){
         return (
             <React.Fragment>
+                <Modal modalClosed={this.cancelOrderHandler.bind(this)} showModal={this.state.showOrderDetails}>
+                    <OrderDetails totalBurgerPrice={this.state.totalPrice} cancelOrder={this.cancelOrderHandler.bind(this)} confirmOrder={()=>{alert("order received")}} burgerIngredientsMap={this.state.burgerIngredientsMap}/>
+                </Modal>
                 <Burger burgerIngredientsMap={this.state.burgerIngredientsMap}/>
-                <BuildControls 
+                <BuildControls
+                    burgerPrice={this.state.totalPrice} 
                     addIngredient={this.addIngredientHandler.bind(this)} 
                     removeIngredient={this.removeIngredientHandler.bind(this)}
-                    disabledLessBtnsMap={disabledLessBtnsMap}                       
+                    disabledLessBtnsMap={this.getDisabledLessBtnsMap.call(this)}   
+                    disabledOrderBtn={this.getIngredientsTotalAmount.call(this)<=0}  
+                    orderBtnClick={this.orderBtnClickHandler.bind(this)}                  
                 />
             </React.Fragment>
         )

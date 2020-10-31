@@ -34,7 +34,9 @@ function renderBuildControls({addIngredient,removeIngredient,disabledLessBtnsMap
 }
 const buildControls=(props)=>(
     <div className={BuildControlsClasses.BuildControls}>
+        <p>Burger Price: <strong>{props.burgerPrice.toFixed(2)}</strong></p>
         {renderBuildControls(props)}
+        <button onClick={props.orderBtnClick} disabled={props.disabledOrderBtn} className={BuildControlsClasses.OrderButton}>ORDER NOW</button>
     </div>
 );
 
