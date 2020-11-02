@@ -5,10 +5,16 @@
     box-sizing: border-box;
     border-radius: 5px;
 }
-.Logo.SideDrawer img{
-    height: 15%
-}
-
 .Logo img {
     height: 100%;
 }
+.Logo.SideDrawer{
+    height:25%;
+    
+}
+.Logo.SideDrawer img{
+display:inline-block;
+height:100%;
+width:100%;
+}
+

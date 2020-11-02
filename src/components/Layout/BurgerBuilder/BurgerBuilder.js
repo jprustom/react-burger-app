@@ -75,7 +75,7 @@ class BurgerBuilder extends Component{
         return (
             <React.Fragment>
                 <Modal modalClosed={this.cancelOrderHandler.bind(this)} showModal={this.state.showOrderDetails}>
-                    <OrderDetails totalBurgerPrice={this.state.totalPrice} cancelOrder={this.cancelOrderHandler.bind(this)} confirmOrder={()=>{alert("order received")}} burgerIngredientsMap={this.state.burgerIngredientsMap}/>
+                    <OrderDetails showOrderDetails={this.state.showOrderDetails} totalBurgerPrice={this.state.totalPrice} cancelOrder={this.cancelOrderHandler.bind(this)} confirmOrder={()=>{alert("order received")}} burgerIngredientsMap={this.state.burgerIngredientsMap}/>
                 </Modal>
                 <Burger burgerIngredientsMap={this.state.burgerIngredientsMap}/>
                 <BuildControls

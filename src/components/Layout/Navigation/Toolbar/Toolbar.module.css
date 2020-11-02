@@ -12,15 +12,24 @@
     box-sizing: border-box;
     z-index: 90;
 }
-
+.Toolbar>div{
+    cursor:pointer
+}
 .Toolbar nav {
-    height: 100%;
+    display:none;
+    
 }
 
 .Logo {
     height: 80%;
+    
 }
-
+@media(min-width:500px){
+    .Toolbar nav{
+        height: 100%;
+        display:block
+    }
+}
 @media (max-width: 499px) {
     .DesktopOnly {
         display: none;
