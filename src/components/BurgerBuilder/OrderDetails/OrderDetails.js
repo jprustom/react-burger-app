@@ -8,7 +8,6 @@ function capitalizeFirstLetter(string){
 
 
 class OrderDetails extends Component{
-   
     shouldComponentUpdate(nextProps){
         return (nextProps.showOrderDetails!==this.props.showOrderDetails)
     }
