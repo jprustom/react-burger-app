@@ -80,27 +80,37 @@ class BurgerBuilder extends Component{
         })
     }
     purchaseHandler(){
-        this.setState({
-            loadingOrder:true
-        })
-        const orderToSave={
-            ingredientsMap:this.state.burgerIngredientsMap,
-            totalPrice:this.state.totalPrice
+        // this.setState({
+        //     loadingOrder:true
+        // })
+        // const orderToSave={
+        //     ingredientsMap:this.state.burgerIngredientsMap,
+        //     totalPrice:this.state.totalPrice
+        // }
+        // axios.post('/orders.json',orderToSave)
+        //     .then((response)=>{
+        //         this.setState({
+        //             loadingOrder:false,
+        //             showOrderDetails:false
+        //         })
+        //     })
+        //     .catch((err)=>{
+        //         console.log(err)
+        //         this.setState({
+        //             loadingOrder:false,
+        //             showOrderDetails:false
+        //         })
+        //     })
+        const ingredientsQueryParams=[];
+        for (let burgerIngredientDecoded in this.state.burgerIngredientsMap){
+            const burgerIngredient=encodeURI(burgerIngredientDecoded);
+            const burgerIngredientAmount=encodeURI(this.state.burgerIngredientsMap[burgerIngredient])
+            ingredientsQueryParams.push(`${burgerIngredient}=${burgerIngredientAmount}`)
         }
-        axios.post('/orders.json',orderToSave)
-            .then((response)=>{
-                this.setState({
-                    loadingOrder:false,
-                    showOrderDetails:false
-                })
-            })
-            .catch((err)=>{
-                console.log(err)
-                this.setState({
-                    loadingOrder:false,
-                    showOrderDetails:false
-                })
-            })
+        this.props.history.push({
+            pathname:'/checkout',
+            search:'?'+ingredientsQueryParams.join('&')
+        })
     }
     render(){
         return (
