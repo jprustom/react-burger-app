@@ -80,27 +80,7 @@ class BurgerBuilder extends Component{
         })
     }
     purchaseHandler(){
-        // this.setState({
-        //     loadingOrder:true
-        // })
-        // const orderToSave={
-        //     ingredientsMap:this.state.burgerIngredientsMap,
-        //     totalPrice:this.state.totalPrice
-        // }
-        // axios.post('/orders.json',orderToSave)
-        //     .then((response)=>{
-        //         this.setState({
-        //             loadingOrder:false,
-        //             showOrderDetails:false
-        //         })
-        //     })
-        //     .catch((err)=>{
-        //         console.log(err)
-        //         this.setState({
-        //             loadingOrder:false,
-        //             showOrderDetails:false
-        //         })
-        //     })
+
         const ingredientsQueryParams=[];
         for (let burgerIngredientDecoded in this.state.burgerIngredientsMap){
             const burgerIngredient=encodeURI(burgerIngredientDecoded);
@@ -109,7 +89,7 @@ class BurgerBuilder extends Component{
         }
         this.props.history.push({
             pathname:'/checkout',
-            search:'?'+ingredientsQueryParams.join('&')
+            search:'?'+ingredientsQueryParams.join('&')+`&totalPrice=${this.state.totalPrice}`
         })
     }
     render(){

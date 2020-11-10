@@ -1,19 +1,19 @@
 import React from 'react';
 import CheckoutClasses from './Checkout.module.css'
-import Burger from '../Burger/Burger.js'
-import Button from '../../UI/Button/Button.js'
+import Burger from '../BurgerBuilder/Burger/Burger.js'
+import Button from '../UI/Button/Button.js'
 import ContactData from './ContactData/ContactData.js'
 import {Route} from 'react-router-dom';
 
 class Checkout extends React.Component{
     state={
-        burgerIngredientsMap:{
-            salad:0
-        }
+        burgerIngredientsMap:null
     }
-    componentDidMount(){
+    componentWillMount(){
         const queryParameters=new URLSearchParams(this.props.location.search)
         for (const [ingredient,ingredientAmount] of queryParameters.entries()){
+            if (ingredient==='totalPrice')
+                continue;
             this.setState(previousState=>{
                 return {
                     burgerIngredientsMap:{
