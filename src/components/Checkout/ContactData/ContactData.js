@@ -31,18 +31,21 @@ class ContactData extends React.Component{
             value:'fastest'
         }
     }
-    orderHandler(event){
-        event.preventDefault();
+    isFormValid(){
         for (let inputElementName in this.state){
             const inputElement=this.state[inputElementName]
-            if (!inputElement.ref) continue;
+            const isInput=inputElement.hasOwnProperty('ref')
+            if (!isInput) continue;
             const inputElementDOM = inputElement.ref.current;
             if (inputElementDOM.checkValidity())
                 continue;
             inputElement.ref.current.classList.add(InputClasses.InputElementInvalid)
         }
         if (!this.contactDataFormRef.current.reportValidity())
-            return;
+            return false;
+        return true;
+    }
+    saveOrder(){
         this.setState({
             processingOrder:true
         })
@@ -57,7 +60,6 @@ class ContactData extends React.Component{
                 postalCode:this.state.streetName.value
             }
         }
-        
         axios.post('/orders.json',orderToSave)
             .then((response)=>{
                 this.setState({
@@ -73,6 +75,11 @@ class ContactData extends React.Component{
                     // showOrderDetails:false
                 })
             })
+    }
+    orderHandler(event){
+        event.preventDefault();
+        if (this.isFormValid())
+            this.saveOrder()
     }
     inputChanged(contactOrderDataToAssign,event){
         this.setState({
