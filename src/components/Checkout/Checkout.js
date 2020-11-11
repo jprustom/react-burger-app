@@ -7,13 +7,19 @@ import {Route} from 'react-router-dom';
 
 class Checkout extends React.Component{
     state={
-        burgerIngredientsMap:null
+        burgerIngredientsMap:null,
+        totalPrice:null
     }
     componentWillMount(){
         const queryParameters=new URLSearchParams(this.props.location.search)
         for (const [ingredient,ingredientAmount] of queryParameters.entries()){
-            if (ingredient==='totalPrice')
+            if (ingredient==='totalPrice'){
+                const totalPrice=ingredientAmount
+                this.setState({
+                    totalPrice
+                })
                 continue;
+            }
             this.setState(previousState=>{
                 return {
                     burgerIngredientsMap:{
@@ -23,7 +29,7 @@ class Checkout extends React.Component{
                 }
             })
         } 
-        console.log(this.state)
+  
     }
     checkoutCanceled(){
         this.props.history.goBack()
@@ -37,7 +43,7 @@ class Checkout extends React.Component{
             <Burger burgerIngredientsMap={this.state.burgerIngredientsMap}/>
             <Button btnClicked={this.checkoutCanceled.bind(this)} btnType="Danger">CANCEL</Button>
             <Button btnClicked={this.checkoutConfirmed.bind(this)} btnType="Success">CONTINUE</Button>
-            <Route path={`${this.props.match.path}/contact-data`} render={()=><ContactData burgerIngredientsMap={this.state.burgerIngredientsMap}/>}/>
+            <Route path={`${this.props.match.path}/contact-data`} render={()=><ContactData totalPrice={this.state.totalPrice} burgerIngredientsMap={this.state.burgerIngredientsMap}/>}/>
         </div>
     }
 }

@@ -1,4 +1,5 @@
 .ContactData{
+    position: relative;
     margin: 20px auto;
     width:80%;
     text-align:center;
@@ -7,11 +8,10 @@
     padding:.8rem;
     box-sizing:border-box;
 }
-.ContactData>input{
-    display:block;
-    text-align:center;
-    width:80%;
-    margin:.2rem auto;
+.ContactData>button:last-child{
+    display:inline;
+    margin-left:0;
+    transform: translateX(25%);
 }
 @media(min-width:600px){
     .ContactData{
