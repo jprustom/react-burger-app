@@ -88,8 +88,11 @@ class ContactData extends React.Component{
                 value:event.target.value
             }
         },()=>{
-            const inputElementDom=this.state[contactOrderDataToAssign].ref.current;
-            if (inputElementDom.checkValidity())
+            const inputElementRef = this.state[contactOrderDataToAssign].ref;
+            if (!inputElementRef)
+                return
+            const inputElementDom=inputElementRef.current;
+            if (inputElementDom.checkValidity() && inputElementDom.classList.contains(InputClasses.InputElementInvalid))
                 inputElementDom.classList.remove(InputClasses.InputElementInvalid)
         })
         
