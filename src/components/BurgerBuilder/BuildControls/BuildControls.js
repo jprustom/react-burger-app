@@ -1,43 +1,60 @@
 import React from 'react';
 import BuildControlsClasses from './BuildControls.module.css'
 import BuildControl from './BuildControl/BuildControl.js'
+import {connect} from 'react-redux';
 
-const buildControlsMapArray=[
-    {
-        ingredientLabel:'Salad',
-        ingredientType:'salad'
-    },
-    {
-        ingredientLabel:'Meat',
-        ingredientType:'meat'
-    },
-    {
-        ingredientLabel:'Bacon',
-        ingredientType:'bacon'
-    },
-    {
-        ingredientLabel:'Cheese',
-        ingredientType:'cheese'
-    },
-]
-function renderBuildControls({addIngredient,removeIngredient,disabledLessBtnsMap}){
-    return buildControlsMapArray.map(buildControlMap=>(
+function mapStateToProps({burgerIngredientsMap,totalPrice}){
+    return {
+        burgerIngredientsMap,
+        totalPrice
+    }
+}
+
+
+function renderBuildControls(burgerIngredientsMap,burgerIngredientsArray){
+    return burgerIngredientsArray.map(burgerIngredient=>(
         <BuildControl 
-            ingredientLabel={buildControlMap.ingredientLabel} 
-            key={buildControlMap.ingredientLabel}
-            lessClickHandler={removeIngredient.bind(null,buildControlMap.ingredientType)}
-            moreClickHandler={addIngredient.bind(null,buildControlMap.ingredientType)}
-            disableLessBtn={disabledLessBtnsMap[buildControlMap.ingredientType]}
-
+            ingredient={burgerIngredient}
+            ingredientNotChosen={burgerIngredientsMap[burgerIngredient]===0} 
+            key={burgerIngredient}
         />
     ))
 }
-const buildControls=(props)=>(
-    <div className={BuildControlsClasses.BuildControls}>
-        <p>Burger Price: <strong>{props.burgerPrice.toFixed(2)}</strong></p>
-        {renderBuildControls(props)}
-        <button onClick={props.orderBtnClick} disabled={props.disabledOrderBtn} className={BuildControlsClasses.OrderButton}>ORDER NOW</button>
-    </div>
-);
+const buildControls=(props)=>{
 
-export default buildControls;
+    const burgerIngredientsArray=Object.keys(props.burgerIngredientsMap);
+    const isBurgerEmpty=burgerIngredientsArray
+                            .map(ingredient=>props.burgerIngredientsMap[ingredient])
+                            .reduce((prevAmount,nextAmount)=>prevAmount+nextAmount)
+                                ===0
+    return (
+        <div className={BuildControlsClasses.BuildControls}>
+            <p>Burger Price: <strong>{props.totalPrice.toFixed(2)}</strong></p>
+            {renderBuildControls(props.burgerIngredientsMap,burgerIngredientsArray)}
+            <button onClick={props.orderBtnClick} disabled={isBurgerEmpty} className={BuildControlsClasses.OrderButton}>ORDER NOW</button>
+        </div>
+    )
+};
+
+export default connect(mapStateToProps)(buildControls);
+
+
+
+// const buildControlsMapArray=[
+//     {
+//         ingredientLabel:'Salad',
+//         ingredientType:'salad'
+//     },
+//     {
+//         ingredientLabel:'Meat',
+//         ingredientType:'meat'
+//     },
+//     {
+//         ingredientLabel:'Bacon',
+//         ingredientType:'bacon'
+//     },
+//     {
+//         ingredientLabel:'Cheese',
+//         ingredientType:'cheese'
+//     },
+// ]

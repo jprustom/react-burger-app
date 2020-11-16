@@ -1,16 +1,35 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
-import App from './containers/App/App.js';
+import App from './App/App.js';
 import reportWebVitals from './reportWebVitals';
 import {BrowserRouter} from 'react-router-dom'
+import {createStore,applyMiddleware,compose} from 'redux';
+import {Provider} from 'react-redux';
+import ingredientsReducer from './store/reducers/ingredientsReducer/ingredientsReducer.js';
+
+const componedEnhancers=window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
+
+const loggerMiddleWare=(store)=>{
+  return (next)=>{
+    return (action)=>{
+      console.log(`dispatching `,action);
+      const result=next(action);
+      console.log(`next state is `,store.getState());
+      return result;
+    }
+  }
+}
+const store=createStore(ingredientsReducer,componedEnhancers(applyMiddleware(loggerMiddleWare)));
 
 ReactDOM.render(
-  <React.StrictMode>
+  <Provider store={store}>
+    <React.StrictMode>
     <BrowserRouter>
       <App/>
     </BrowserRouter>
-  </React.StrictMode>,
+  </React.StrictMode>
+  </Provider>,
   document.getElementById('root')
 );
 

@@ -4,33 +4,9 @@ import Burger from '../BurgerBuilder/Burger/Burger.js'
 import Button from '../UI/Button/Button.js'
 import ContactData from './ContactData/ContactData.js'
 import {Route} from 'react-router-dom';
-
+import {connect} from 'react-redux';
 class Checkout extends React.Component{
-    state={
-        burgerIngredientsMap:null,
-        totalPrice:null
-    }
-    componentWillMount(){
-        const queryParameters=new URLSearchParams(this.props.location.search)
-        for (const [ingredient,ingredientAmount] of queryParameters.entries()){
-            if (ingredient==='totalPrice'){
-                const totalPrice=ingredientAmount
-                this.setState({
-                    totalPrice
-                })
-                continue;
-            }
-            this.setState(previousState=>{
-                return {
-                    burgerIngredientsMap:{
-                        ...previousState.burgerIngredientsMap,
-                        [ingredient]:+ingredientAmount
-                    }
-                }
-            })
-        } 
-  
-    }
+    
     checkoutCanceled(){
         this.props.history.goBack()
     }
@@ -40,12 +16,18 @@ class Checkout extends React.Component{
     render(){
         return <div className={CheckoutClasses.Checkout}>
             <h1>We hope it tastes well!!</h1>
-            <Burger burgerIngredientsMap={this.state.burgerIngredientsMap}/>
+            <Burger burgerIngredientsMap={this.props.burgerIngredientsMap}/>
             <Button btnClicked={this.checkoutCanceled.bind(this)} btnType="Danger">CANCEL</Button>
             <Button btnClicked={this.checkoutConfirmed.bind(this)} btnType="Success">CONTINUE</Button>
-            <Route path={`${this.props.match.path}/contact-data`} render={()=><ContactData totalPrice={this.state.totalPrice} burgerIngredientsMap={this.state.burgerIngredientsMap}/>}/>
+            <Route path={`${this.props.match.path}/contact-data`} render={()=><ContactData/>}/>
         </div>
     }
 }
 
-export default Checkout;
+function mapStateToProps({burgerIngredientsMap,totalPrice}){
+    return {
+        burgerIngredientsMap,
+        totalPrice
+    }
+}
+export default connect(mapStateToProps)(Checkout);

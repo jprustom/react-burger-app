@@ -6,7 +6,9 @@ import Spinner from '../../UI/Spinner/Spinner.js'
 import {withRouter} from 'react-router-dom'
 import Input from '../../UI/Input/Input.js'
 import InputClasses from '../../UI/Input/Input.module.css'
-
+import {connect} from 'react-redux';
+import actions from '../../../store/actions/ingredientsActions.js';
+import withErrorHandler from '../../../hoc/withErrorHandler/withErrorHandler.js';
 class ContactData extends React.Component{
     contactDataFormRef=React.createRef()
     state={
@@ -62,16 +64,21 @@ class ContactData extends React.Component{
         }
         axios.post('/orders.json',orderToSave)
             .then((response)=>{
+                if (!response){
+                    return;
+                }
+                console.log(response)
                 this.setState({
                     processingOrder:false,
                     // showOrderDetails:false
                 })
+                this.props.dispatchResetIngredientsAction()
                 this.props.history.push('/')
             })
             .catch((err)=>{
                 console.log(err)
                 this.setState({
-                    loadingOrder:false,
+                    // loadingOrder:false,
                     // showOrderDetails:false
                 })
             })
@@ -116,5 +123,17 @@ class ContactData extends React.Component{
         )
     }
 }
-
-export default withRouter(ContactData);
+function mapDispatchActionsToProps(dispatch){
+    return {
+        dispatchResetIngredientsAction:()=>dispatch({type:actions.RESET_INGREDIENTS})
+    }
+}
+function mapStateToProps({burgerIngredientsMap,totalPrice}){
+    return {
+        burgerIngredientsMap,
+        totalPrice
+    }
+}
+const contactDataWithRouter=withRouter(ContactData);
+const contactDataWithErrorHandler=withErrorHandler(contactDataWithRouter,axios);
+export default connect(mapStateToProps,mapDispatchActionsToProps)(contactDataWithErrorHandler);

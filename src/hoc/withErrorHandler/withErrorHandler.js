@@ -27,6 +27,8 @@ const withErrorHandler=(WrappedComponent,axios)=>
                     error:null
                 });
                 return req
+            },error=>{
+                console.log('error while requesting:',error)
             })
         }
         render(){
