@@ -7,7 +7,7 @@ import {withRouter} from 'react-router-dom'
 import Input from '../../UI/Input/Input.js'
 import InputClasses from '../../UI/Input/Input.module.css'
 import {connect} from 'react-redux';
-import actions from '../../../store/actions/ingredientsActions.js';
+import * as actions from '../../../store/actions';
 import withErrorHandler from '../../../hoc/withErrorHandler/withErrorHandler.js';
 class ContactData extends React.Component{
     contactDataFormRef=React.createRef()
@@ -125,7 +125,7 @@ class ContactData extends React.Component{
 }
 function mapDispatchActionsToProps(dispatch){
     return {
-        dispatchResetIngredientsAction:()=>dispatch({type:actions.RESET_INGREDIENTS})
+        dispatchResetIngredientsAction:()=>dispatch(actions.initBurgerFetch())
     }
 }
 function mapStateToProps({burgerIngredientsMap,totalPrice}){

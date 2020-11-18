@@ -7,21 +7,12 @@ import axios from '../../axios-orders.js';
 import Spinner from '../UI/Spinner/Spinner.js';
 import withErrorHandler from "../../hoc/withErrorHandler/withErrorHandler.js"
 import {connect} from 'react-redux';
-
-
-function mapStateToProps({burgerIngredientsMap,totalPrice}){
-    return {
-        burgerIngredientsMap,
-        totalPrice
-    }
-}
-
+import {initBurgerFetch} from '../../store/actions/burgerActions.js';
 class BurgerBuilder extends Component{
     state={
         showOrderDetails:false,
         loadingOrder:false
     }
-   
     orderBtnClickHandler(){
         this.setState({
             showOrderDetails:true
@@ -34,44 +25,47 @@ class BurgerBuilder extends Component{
         })
     }
     purchaseHandler(){
-
-        const ingredientsQueryParams=[];
-        for (let burgerIngredientDecoded in this.state.burgerIngredientsMap){
-            const burgerIngredient=encodeURI(burgerIngredientDecoded);
-            const burgerIngredientAmount=encodeURI(this.state.burgerIngredientsMap[burgerIngredient])
-            ingredientsQueryParams.push(`${burgerIngredient}=${burgerIngredientAmount}`)
-        }
         this.props.history.push({
-            pathname:'/checkout',
-            // search:'?'+ingredientsQueryParams.join('&')+`&totalPrice=${this.state.totalPrice}`
-        })
+            pathname:'/checkout' })
+    }
+    componentDidMount(){
+        this.props.dispatchInitBurger();
     }
     render(){
         return (
-            <React.Fragment>
-                <Modal modalClosed={this.cancelOrderHandler.bind(this)} showModal={this.state.showOrderDetails}>
-                    {
-                        this.state.loadingOrder
-                            ?<Spinner/>
-                            :<OrderDetails showOrderDetails={this.state.showOrderDetails} totalBurgerPrice={this.props.totalPrice} cancelOrder={this.cancelOrderHandler.bind(this)} confirmOrder={this.purchaseHandler.bind(this)} burgerIngredientsMap={this.props.burgerIngredientsMap}/>
-                    }
-                    
-                </Modal>
-                <Burger burgerIngredientsMap={this.props.burgerIngredientsMap}/>
-                { <BuildControls orderBtnClick={this.orderBtnClickHandler.bind(this)}/> }
-                {/* {
-                    this.props.burgerIngredientsMap
-                        ?
-                            <React.Fragment>
-                                <Burger burgerIngredientsMap={this.props.burgerIngredientsMap}/>
-                                { <BuildControls orderBtnClick={this.orderBtnClickHandler.bind(this)}/> }
-                            </React.Fragment>
-                        : <Spinner/>
-                } */}
-                
-            </React.Fragment>
+            this.props.burgerIngredientsMap
+                ?   <React.Fragment>
+                        <Modal modalClosed={this.cancelOrderHandler.bind(this)} showModal={this.state.showOrderDetails}>
+                            {
+                                this.state.loadingOrder
+                                    ?<Spinner/>
+                                    :<OrderDetails showOrderDetails={this.state.showOrderDetails} totalBurgerPrice={this.props.totalPrice} cancelOrder={this.cancelOrderHandler.bind(this)} confirmOrder={this.purchaseHandler.bind(this)} burgerIngredientsMap={this.props.burgerIngredientsMap}/>
+                            }
+                        </Modal>
+                        <Burger burgerIngredientsMap={this.props.burgerIngredientsMap}/>
+                        <BuildControls orderBtnClick={this.orderBtnClickHandler.bind(this)}/> 
+                    </React.Fragment>
+                :   <React.Fragment>
+                        <Spinner/>
+                        {
+                            this.props.errorInitBurger
+                                &&
+                            <h1>Could not display Burger.</h1>}
+                    </React.Fragment>
         )
     }
 }
-const BurgerBuilderWrppedWithErrorHandler=withErrorHandler(BurgerBuilder,axios);
-export default connect(mapStateToProps)(BurgerBuilderWrppedWithErrorHandler)
+const BurgerBuilderWrappedWithErrorHandler=withErrorHandler(BurgerBuilder,axios);
+function mapDispatchActionsToProps(dispatch){
+    return{
+        dispatchInitBurger:()=>dispatch(initBurgerFetch())
+    }
+}
+function mapStateToProps({burgerIngredientsMap,totalPrice,errorInitBurger}){
+    return {
+        burgerIngredientsMap,
+        totalPrice,
+        errorInitBurger
+    }
+}
+export default connect(mapStateToProps,mapDispatchActionsToProps)(BurgerBuilderWrappedWithErrorHandler)

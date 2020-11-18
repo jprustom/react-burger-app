@@ -3,14 +3,6 @@ import BuildControlsClasses from './BuildControls.module.css'
 import BuildControl from './BuildControl/BuildControl.js'
 import {connect} from 'react-redux';
 
-function mapStateToProps({burgerIngredientsMap,totalPrice}){
-    return {
-        burgerIngredientsMap,
-        totalPrice
-    }
-}
-
-
 function renderBuildControls(burgerIngredientsMap,burgerIngredientsArray){
     return burgerIngredientsArray.map(burgerIngredient=>(
         <BuildControl 
@@ -35,7 +27,12 @@ const buildControls=(props)=>{
         </div>
     )
 };
-
+function mapStateToProps({burgerIngredientsMap,totalPrice}){
+    return {
+        burgerIngredientsMap,
+        totalPrice
+    }
+}
 export default connect(mapStateToProps)(buildControls);
 
 

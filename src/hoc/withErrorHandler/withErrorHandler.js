@@ -32,7 +32,6 @@ const withErrorHandler=(WrappedComponent,axios)=>
             })
         }
         render(){
-            
             return (
                 <React.Fragment>
                     <Modal modalClosed={this.closeModal.bind(this)} showModal={this.state.error}>

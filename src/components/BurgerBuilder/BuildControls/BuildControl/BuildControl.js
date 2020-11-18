@@ -1,14 +1,8 @@
 import React from 'react';
 import BuildControlClasses from './BuildControl.module.css';
-import actions from '../../../../store/actions/ingredientsActions.js';
+import * as ingredientsActions from '../../../../store/actions/burgerActions.js';
 import {connect} from 'react-redux';
 
-function mapDispatchActionsToProps(dispatch){
-    return {
-        dispatchAddIngredient:(ingredientToAdd)=>dispatch({type:actions.ADD_INGREDIENT,ingredientToAdd}),
-        dispatchRemoveIngredient:(ingredientToRemove)=>dispatch({type:actions.REMOVE_INGREDIENT,ingredientToRemove})
-    }
-}
 const buildControl=(props)=>(
     <div className={BuildControlClasses.BuildControl}>
         <div className={BuildControlClasses.Label}>{props.ingredient}</div>
@@ -16,5 +10,10 @@ const buildControl=(props)=>(
         <button onClick={props.dispatchAddIngredient.bind(null,props.ingredient)} className={BuildControlClasses.More}>More</button>
     </div>
 );
-
+function mapDispatchActionsToProps(dispatch){
+    return {
+        dispatchAddIngredient:(ingredientToAdd)=>dispatch(ingredientsActions.addIngredient(ingredientToAdd)),
+        dispatchRemoveIngredient:(ingredientToRemove)=>dispatch(ingredientsActions.removeIngredient(ingredientToRemove))
+    }
+}
 export default connect(null,mapDispatchActionsToProps)(buildControl);

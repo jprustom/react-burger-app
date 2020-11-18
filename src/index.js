@@ -6,21 +6,13 @@ import reportWebVitals from './reportWebVitals';
 import {BrowserRouter} from 'react-router-dom'
 import {createStore,applyMiddleware,compose} from 'redux';
 import {Provider} from 'react-redux';
-import ingredientsReducer from './store/reducers/ingredientsReducer/ingredientsReducer.js';
+import ingredientsReducer from './store/reducers/burgerReducer.js';
+import thunk from 'redux-thunk';
 
-const componedEnhancers=window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
-
-const loggerMiddleWare=(store)=>{
-  return (next)=>{
-    return (action)=>{
-      console.log(`dispatching `,action);
-      const result=next(action);
-      console.log(`next state is `,store.getState());
-      return result;
-    }
-  }
-}
-const store=createStore(ingredientsReducer,componedEnhancers(applyMiddleware(loggerMiddleWare)));
+const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
+const store=createStore(ingredientsReducer,composeEnhancers(
+  applyMiddleware(thunk)
+));
 
 ReactDOM.render(
   <Provider store={store}>
