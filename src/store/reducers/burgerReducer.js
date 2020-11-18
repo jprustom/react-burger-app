@@ -53,10 +53,8 @@ function ingredientsReducer(burgerOldState=burgerInitialState,burgerAction){
             return initializeBurger(burgerAction.ingredientsToInit,burgerAction.ingredientsInitTotalPrice);
         case (actionsTypes.INIT_BURGER_ERROR): //WHAT TO DO?
             return enableErrorInitBurger(burgerOldState);
-        case '@@INIT':
-            return burgerOldState;
         default:
-            throw new Error(`Unknown action type! Provided type was ${burgerAction.type}`)
+            return burgerOldState;
     }
 }
 export default ingredientsReducer;

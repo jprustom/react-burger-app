@@ -9,6 +9,7 @@ import InputClasses from '../../UI/Input/Input.module.css'
 import {connect} from 'react-redux';
 import * as actions from '../../../store/actions';
 import withErrorHandler from '../../../hoc/withErrorHandler/withErrorHandler.js';
+import {purchaseBurgerReq} from '../../../store/actions'
 class ContactData extends React.Component{
     contactDataFormRef=React.createRef()
     state={
@@ -54,7 +55,7 @@ class ContactData extends React.Component{
         const orderToSave={
             ingredientsMap:this.props.burgerIngredientsMap,
             totalPrice:this.props.totalPrice+'$',
-            deliveryMethod:this.state.deliveryMethod,
+            deliveryMethod:this.state.deliveryMethod.value,
             contactDetails:{
                 name:this.state.name.value,
                 email:this.state.email.value,
@@ -62,26 +63,27 @@ class ContactData extends React.Component{
                 postalCode:this.state.streetName.value
             }
         }
-        axios.post('/orders.json',orderToSave)
-            .then((response)=>{
-                if (!response){
-                    return;
-                }
-                console.log(response)
-                this.setState({
-                    processingOrder:false,
-                    // showOrderDetails:false
-                })
-                this.props.dispatchResetIngredientsAction()
-                this.props.history.push('/')
-            })
-            .catch((err)=>{
-                console.log(err)
-                this.setState({
-                    // loadingOrder:false,
-                    // showOrderDetails:false
-                })
-            })
+        this.props.onOrderBurger(orderToSave);
+        // axios.post('/orders.json',orderToSave)
+        //     .then((response)=>{
+        //         if (!response){
+        //             return;
+        //         }
+        //         console.log(response)
+        //         this.setState({
+        //             processingOrder:false,
+        //             // showOrderDetails:false
+        //         })
+        //         this.props.dispatchResetIngredientsAction()
+        //         this.props.history.push('/')
+        //     })
+        //     .catch((err)=>{
+        //         console.log(err)
+        //         this.setState({
+        //             // loadingOrder:false,
+        //             // showOrderDetails:false
+        //         })
+        //     })
     }
     orderHandler(event){
         event.preventDefault();
@@ -125,10 +127,12 @@ class ContactData extends React.Component{
 }
 function mapDispatchActionsToProps(dispatch){
     return {
-        dispatchResetIngredientsAction:()=>dispatch(actions.initBurgerFetch())
+        onOrderBurger:(orderToSave)=>dispatch(purchaseBurgerReq(orderToSave)),
+        dispatchInitIngredientsAction:()=>dispatch(actions.initBurgerFetch())
     }
 }
-function mapStateToProps({burgerIngredientsMap,totalPrice}){
+function mapStateToProps({burger}){
+    const {burgerIngredientsMap,totalPrice}=burger;
     return {
         burgerIngredientsMap,
         totalPrice

@@ -4,5 +4,5 @@ export{
     initBurgerFetch
 } from './burgerActions.js';
 export {
-
+    purchaseBurgerReq
 } from './ordersActions.js';

@@ -8,6 +8,7 @@ import Spinner from '../UI/Spinner/Spinner.js';
 import withErrorHandler from "../../hoc/withErrorHandler/withErrorHandler.js"
 import {connect} from 'react-redux';
 import {initBurgerFetch} from '../../store/actions/burgerActions.js';
+
 class BurgerBuilder extends Component{
     state={
         showOrderDetails:false,
@@ -32,6 +33,7 @@ class BurgerBuilder extends Component{
         this.props.dispatchInitBurger();
     }
     render(){
+        console.log(this.props)
         return (
             this.props.burgerIngredientsMap
                 ?   <React.Fragment>
@@ -61,7 +63,8 @@ function mapDispatchActionsToProps(dispatch){
         dispatchInitBurger:()=>dispatch(initBurgerFetch())
     }
 }
-function mapStateToProps({burgerIngredientsMap,totalPrice,errorInitBurger}){
+function mapStateToProps({burger}){
+    const {burgerIngredientsMap,totalPrice,errorInitBurger}=burger
     return {
         burgerIngredientsMap,
         totalPrice,

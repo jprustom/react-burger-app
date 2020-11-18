@@ -24,7 +24,8 @@ class Checkout extends React.Component{
     }
 }
 
-function mapStateToProps({burgerIngredientsMap,totalPrice}){
+function mapStateToProps({burger}){
+    const {burgerIngredientsMap,totalPrice}=burger;
     return {
         burgerIngredientsMap,
         totalPrice
