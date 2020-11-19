@@ -7,7 +7,7 @@ import axios from '../../axios-orders.js';
 import Spinner from '../UI/Spinner/Spinner.js';
 import withErrorHandler from "../../hoc/withErrorHandler/withErrorHandler.js"
 import {connect} from 'react-redux';
-import {initBurgerFetch} from '../../store/actions/burgerActions.js';
+import {initBurgerFetch,showCheckout} from '../../store/actions';
 
 class BurgerBuilder extends Component{
     state={
@@ -26,6 +26,7 @@ class BurgerBuilder extends Component{
         })
     }
     purchaseHandler(){
+        this.props.dispatchShowCheckout();
         this.props.history.push({
             pathname:'/checkout' })
     }
@@ -60,7 +61,8 @@ class BurgerBuilder extends Component{
 const BurgerBuilderWrappedWithErrorHandler=withErrorHandler(BurgerBuilder,axios);
 function mapDispatchActionsToProps(dispatch){
     return{
-        dispatchInitBurger:()=>dispatch(initBurgerFetch())
+        dispatchInitBurger:()=>dispatch(initBurgerFetch()),
+        dispatchShowCheckout:()=>dispatch(showCheckout())
     }
 }
 function mapStateToProps({burger}){

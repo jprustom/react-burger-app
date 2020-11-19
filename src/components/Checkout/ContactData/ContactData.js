@@ -7,13 +7,13 @@ import {withRouter} from 'react-router-dom'
 import Input from '../../UI/Input/Input.js'
 import InputClasses from '../../UI/Input/Input.module.css'
 import {connect} from 'react-redux';
-import * as actions from '../../../store/actions';
 import withErrorHandler from '../../../hoc/withErrorHandler/withErrorHandler.js';
-import {purchaseBurgerReq} from '../../../store/actions'
+import {purchaseBurgerReq} from '../../../store/actions';
+import {Redirect} from 'react-router-dom';
+
 class ContactData extends React.Component{
     contactDataFormRef=React.createRef()
     state={
-        processingOrder:false,
         name:{
             value:null,
             ref:React.createRef()
@@ -49,12 +49,9 @@ class ContactData extends React.Component{
         return true;
     }
     saveOrder(){
-        this.setState({
-            processingOrder:true
-        })
         const orderToSave={
             ingredientsMap:this.props.burgerIngredientsMap,
-            totalPrice:this.props.totalPrice+'$',
+            totalPrice:this.props.totalPrice,
             deliveryMethod:this.state.deliveryMethod.value,
             contactDetails:{
                 name:this.state.name.value,
@@ -63,27 +60,7 @@ class ContactData extends React.Component{
                 postalCode:this.state.streetName.value
             }
         }
-        this.props.onOrderBurger(orderToSave);
-        // axios.post('/orders.json',orderToSave)
-        //     .then((response)=>{
-        //         if (!response){
-        //             return;
-        //         }
-        //         console.log(response)
-        //         this.setState({
-        //             processingOrder:false,
-        //             // showOrderDetails:false
-        //         })
-        //         this.props.dispatchResetIngredientsAction()
-        //         this.props.history.push('/')
-        //     })
-        //     .catch((err)=>{
-        //         console.log(err)
-        //         this.setState({
-        //             // loadingOrder:false,
-        //             // showOrderDetails:false
-        //         })
-        //     })
+        this.props.dispatchPurchaseBurgerReq(orderToSave);
     }
     orderHandler(event){
         event.preventDefault();
@@ -108,34 +85,38 @@ class ContactData extends React.Component{
     }
     render(){
         return (
-            this.state.processingOrder
-                ?<Spinner/>
-                :<form ref={this.contactDataFormRef} noValidate onSubmit={this.orderHandler.bind(this)} className={ContactDataClasses.ContactData}>
-                    <h4>Enter Your Contact Data Here</h4>
-                    <Input inputRef={this.state.name.ref} onChange={this.inputChanged.bind(this,'name')} label="name" type="text" name="name" placeholder="Your Name" required/>
-                    <Input inputRef={this.state.email.ref} onChange={this.inputChanged.bind(this,'email')} label="email" type='email' name="email" placeholder='Enter Your Email' required/>
-                    <Input inputRef={this.state.streetName.ref} onChange={this.inputChanged.bind(this,'streetName')} label="street name" type="text" name="streetName" placeholder="Your Street Name" required/>
-                    <Input inputRef={this.state.postalCode.ref} onChange={this.inputChanged.bind(this,'postalCode')} label="postal code" minLength={4} type="text" name="postalCode" placeholder="Postal Code" required/>
-                    <Input onChange={this.inputChanged.bind(this,'deliveryMethod')} inputType="select" label="choose a delivery method" options={[
-                        {value:'fastest',displayValue:'Fastest'},
-                        {value:'cheapest',displayValue:'Cheapest'}
-                    ]}></Input>
-                    <Button submit btnType="Success">ORDER</Button>
-                </form>  
+            this.props.orderProcessed
+                ?<Redirect to="/"/>
+                :this.props.processingOrder
+                    ?<Spinner/>
+                    :<form ref={this.contactDataFormRef} noValidate onSubmit={this.orderHandler.bind(this)} className={ContactDataClasses.ContactData}>
+                        <h4>Enter Your Contact Data Here</h4>
+                        <Input inputRef={this.state.name.ref} onChange={this.inputChanged.bind(this,'name')} label="name" type="text" name="name" placeholder="Your Name" required/>
+                        <Input inputRef={this.state.email.ref} onChange={this.inputChanged.bind(this,'email')} label="email" type='email' name="email" placeholder='Enter Your Email' required/>
+                        <Input inputRef={this.state.streetName.ref} onChange={this.inputChanged.bind(this,'streetName')} label="street name" type="text" name="streetName" placeholder="Your Street Name" required/>
+                        <Input inputRef={this.state.postalCode.ref} onChange={this.inputChanged.bind(this,'postalCode')} label="postal code" minLength={4} type="text" name="postalCode" placeholder="Postal Code" required/>
+                        <Input onChange={this.inputChanged.bind(this,'deliveryMethod')} inputType="select" label="choose a delivery method" options={[
+                            {value:'fastest',displayValue:'Fastest'},
+                            {value:'cheapest',displayValue:'Cheapest'}
+                        ]}></Input>
+                        <Button submit btnType="Success">ORDER</Button>
+                    </form>  
         )
     }
 }
 function mapDispatchActionsToProps(dispatch){
     return {
-        onOrderBurger:(orderToSave)=>dispatch(purchaseBurgerReq(orderToSave)),
-        dispatchInitIngredientsAction:()=>dispatch(actions.initBurgerFetch())
+        dispatchPurchaseBurgerReq:(orderToSave)=>dispatch(purchaseBurgerReq(orderToSave))
     }
 }
-function mapStateToProps({burger}){
+function mapStateToProps({burger,orders}){
+    const {processingOrder,orderProcessed}=orders;
     const {burgerIngredientsMap,totalPrice}=burger;
     return {
         burgerIngredientsMap,
-        totalPrice
+        totalPrice,
+        processingOrder,
+        orderProcessed
     }
 }
 const contactDataWithRouter=withRouter(ContactData);

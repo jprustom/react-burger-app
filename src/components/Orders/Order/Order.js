@@ -22,7 +22,7 @@ const order=(props)=> {
                             </span>
                         )
             }
-            <p>Price: <strong>{props.orderTotalPrice.toFixed(2)}$</strong></p>
+            <p>Price: <strong>{props.orderTotalPrice.toFixed(2)+'$'}</strong></p>
         </div>
     )
     }

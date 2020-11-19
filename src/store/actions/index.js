@@ -4,5 +4,7 @@ export{
     initBurgerFetch
 } from './burgerActions.js';
 export {
-    purchaseBurgerReq
+    purchaseBurgerReq,
+    showCheckout,
+    fetchOrdersReq
 } from './ordersActions.js';
