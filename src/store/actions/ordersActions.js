@@ -24,10 +24,10 @@ function puchaseBurgerSuccess(savedOrder){
         savedOrder
     }
 }
-export function purchaseBurgerReq(orderToSave){
+export function purchaseBurgerReq(orderToSave,userToken){
     return function(dispatch){
         dispatch(purchaseBurgerStartReq()); 
-        axios.post('/orders.json',orderToSave)
+        axios.post(`/orders.json?auth=${userToken}`,orderToSave)
             .then((response)=>{
                 if (!response)
                     throw new Error('no response after fetching orders!')
@@ -64,10 +64,10 @@ function fetchOrdersReqFail(fetchOrdersError){
         fetchOrdersError
     }
 }
-export function fetchOrdersReq(){
+export function fetchOrdersReq(userToken){
     return function(dispatch){
         dispatch(fetchOrdersStartReq());
-        axios.get('/orders.json')
+        axios.get(`/orders.json?auth=${userToken}`)
             .then((response)=>{
                 const fetchedOrders=[]
                 for (let orderId in response.data){

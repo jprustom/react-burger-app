@@ -32,6 +32,7 @@ const authClearError=(authOldState)=>{
         authErrorMessage:null
     }
 }
+const authLogout=()=>authInitialState
 function authReducer(authOldState=authInitialState,authAction){
     switch(authAction.type){
         case actionTypes.AUTH_REQ_START:
@@ -42,6 +43,8 @@ function authReducer(authOldState=authInitialState,authAction){
             return authReqFail(authAction);
         case actionTypes.AUTH_CLEAR_ERROR:
             return authClearError(authOldState)
+        case actionTypes.AUTH_LOGOUT:
+            return authLogout()
         default:
             return authOldState
     }

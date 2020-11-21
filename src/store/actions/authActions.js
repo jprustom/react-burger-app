@@ -6,6 +6,11 @@ export function clearAuthError(){
         type:actionTypes.AUTH_CLEAR_ERROR
     }
 }
+export function authLogout(){
+    return {
+        type:actionTypes.AUTH_LOGOUT
+    }
+}
 const authReqSuccess=(userId,userToken)=>{
     console.log('auth success')
     return {

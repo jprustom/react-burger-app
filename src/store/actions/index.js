@@ -10,5 +10,6 @@ export {
 } from './ordersActions.js';
 export {
     authReq,
-    clearAuthError
+    clearAuthError,
+    authLogout
 } from './authActions.js'

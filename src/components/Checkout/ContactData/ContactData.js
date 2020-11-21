@@ -63,7 +63,7 @@ class ContactData extends React.Component{
                 postalCode:this.state.streetName.value
             }
         }
-        this.props.dispatchPurchaseBurgerReq(orderToSave);
+        this.props.dispatchPurchaseBurgerReq(orderToSave,this.props.userToken);
     }
     removeInvalidClass(contactOrderDataToAssign){
         //contactOrderDataToAssign is for eg email,phone...
@@ -112,17 +112,18 @@ class ContactData extends React.Component{
 }
 function mapDispatchActionsToProps(dispatch){
     return {
-        dispatchPurchaseBurgerReq:(orderToSave)=>dispatch(purchaseBurgerReq(orderToSave))
+        dispatchPurchaseBurgerReq:(orderToSave,userToken)=>dispatch(purchaseBurgerReq(orderToSave,userToken)),
     }
 }
-function mapStateToProps({burger,orders}){
+function mapStateToProps({burger,orders,auth}){
     const {processingOrder,orderProcessed}=orders;
     const {burgerIngredientsMap,totalPrice}=burger;
     return {
         burgerIngredientsMap,
         totalPrice,
         processingOrder,
-        orderProcessed
+        orderProcessed,
+        userToken:auth.userToken
     }
 }
 const contactDataWithRouter=withRouter(ContactData);

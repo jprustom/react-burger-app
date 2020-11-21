@@ -38,6 +38,7 @@ class BurgerBuilder extends Component{
         return (
             this.props.burgerIngredientsMap
                 ?   <React.Fragment>
+                        <h1 style={{textAlign:'center'}}>Welcome To Jean-Paul's Burger Shop</h1>
                         <Modal modalClosed={this.cancelOrderHandler.bind(this)} showModal={this.state.showOrderDetails}>
                             {
                                 this.state.loadingOrder
@@ -46,7 +47,7 @@ class BurgerBuilder extends Component{
                             }
                         </Modal>
                         <Burger burgerIngredientsMap={this.props.burgerIngredientsMap}/>
-                        <BuildControls orderBtnClick={this.orderBtnClickHandler.bind(this)}/> 
+                        <BuildControls isAuthenticated={this.props.isAuthenticated} orderBtnClick={this.orderBtnClickHandler.bind(this)}/> 
                     </React.Fragment>
                 :   <React.Fragment>
                         <Spinner/>
@@ -65,12 +66,13 @@ function mapDispatchActionsToProps(dispatch){
         dispatchShowCheckout:()=>dispatch(showCheckout())
     }
 }
-function mapStateToProps({burger}){
+function mapStateToProps({burger,auth}){
     const {burgerIngredientsMap,totalPrice,errorInitBurger}=burger
     return {
         burgerIngredientsMap,
         totalPrice,
-        errorInitBurger
+        errorInitBurger,
+        isAuthenticated:auth.userToken!=null
     }
 }
 export default connect(mapStateToProps,mapDispatchActionsToProps)(BurgerBuilderWrappedWithErrorHandler)

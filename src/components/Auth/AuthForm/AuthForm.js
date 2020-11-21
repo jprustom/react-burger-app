@@ -1,12 +1,12 @@
 import React,{Component} from 'react';
 import AuthClasses from './AuthForm.module.css'
-import Button from '../UI/Button/Button.js'
-import * as actions from '../../store/actions'
+import Button from '../../UI/Button/Button.js'
+import * as actions from '../../../store/actions'
 import {connect} from 'react-redux';
-import Spinner from '../UI/Spinner/Spinner.js';
-
+import Spinner from '../../UI/Spinner/Spinner.js';
+import {Redirect,withRouter} from 'react-router-dom'
 //Unlike ContactData.js, I decided to not use the Input component
-class Auth extends Component{
+class AuthForm extends Component{
     state={
         email:{
             value:null,
@@ -34,8 +34,11 @@ class Auth extends Component{
         this.props.dispatchClearAuthError();
     }
     render(){
+        const isOrderPending=this.props.history.location.search.includes('isOrderPending=true')
         if (!['signUp','signIn'].includes(this.props.authMode))
             throw new Error('Should provide valid authMode')
+        if (this.props.userToken)
+            return <Redirect to={`${isOrderPending?'/checkout':'/'}`}/>;
         return <form onSubmit={this.authReqHandler.bind(this)} className={AuthClasses.AuthForm}>
                     {  
                         this.props.loadingAuth
@@ -61,5 +64,5 @@ function mapDispatchActionsToProps(dispatch){
 function mapStateToProps({auth}){
     return auth
 }
-const AuthWithRedux=connect(mapStateToProps,mapDispatchActionsToProps)(Auth)
-export default AuthWithRedux;
+const AuthFormWithRouter=withRouter(AuthForm);
+export const AuthFormWithRedux=connect(mapStateToProps,mapDispatchActionsToProps)(AuthFormWithRouter)

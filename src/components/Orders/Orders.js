@@ -8,7 +8,7 @@ import {connect} from 'react-redux';
 
 class Orders extends React.Component{
     componentDidMount(){
-        this.props.dispatchFetchOrdersReq();
+        this.props.dispatchFetchOrdersReq(this.props.userToken);
     }
     render(){
         return this.props.fetchingOrders
@@ -28,15 +28,16 @@ class Orders extends React.Component{
 }
 
 const ordersWithErrorHandler=withErrorHandler(Orders,axios);
-function mapStateToProps({orders}){
+function mapStateToProps({orders,auth}){
     return {
         fetchedOrders:orders.fetchedOrders,
-        fetchingOrders:orders.fetchingOrders
+        fetchingOrders:orders.fetchingOrders,
+        userToken:auth.userToken
     }
 }
 function mapDispatchActionsToProps(dispatch){
     return {
-        dispatchFetchOrdersReq:()=>dispatch(fetchOrdersReq())
+        dispatchFetchOrdersReq:(userToken)=>dispatch(fetchOrdersReq(userToken))
     }
 }
 export default connect(mapStateToProps,mapDispatchActionsToProps)(ordersWithErrorHandler) ;

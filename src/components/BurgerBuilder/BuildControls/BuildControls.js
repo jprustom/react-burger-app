@@ -2,6 +2,7 @@ import React from 'react';
 import BuildControlsClasses from './BuildControls.module.css'
 import BuildControl from './BuildControl/BuildControl.js'
 import {connect} from 'react-redux';
+import {withRouter} from 'react-router-dom';
 
 function renderBuildControls(burgerIngredientsMap,burgerIngredientsArray){
     return burgerIngredientsArray.map(burgerIngredient=>(
@@ -13,7 +14,6 @@ function renderBuildControls(burgerIngredientsMap,burgerIngredientsArray){
     ))
 }
 const buildControls=(props)=>{
-
     const burgerIngredientsArray=Object.keys(props.burgerIngredientsMap);
     const isBurgerEmpty=burgerIngredientsArray
                             .map(ingredient=>props.burgerIngredientsMap[ingredient])
@@ -23,7 +23,11 @@ const buildControls=(props)=>{
         <div className={BuildControlsClasses.BuildControls}>
             <p>Burger Price: <strong>{props.totalPrice.toFixed(2)}</strong></p>
             {renderBuildControls(props.burgerIngredientsMap,burgerIngredientsArray)}
-            <button onClick={props.orderBtnClick} disabled={isBurgerEmpty} className={BuildControlsClasses.OrderButton}>ORDER NOW</button>
+            {
+                props.isAuthenticated
+                    ?<button onClick={props.orderBtnClick} disabled={isBurgerEmpty} className={BuildControlsClasses.OrderButton}>ORDER NOW</button>
+                    :<button disabled={isBurgerEmpty} onClick={()=>{props.history.push('/auth/signin?isOrderPending=true')}} className={BuildControlsClasses.OrderButton}>Sign In To Order</button>
+            }
         </div>
     )
 };
@@ -34,25 +38,5 @@ function mapStateToProps({burger}){
         totalPrice
     }
 }
-export default connect(mapStateToProps)(buildControls);
-
-
-
-// const buildControlsMapArray=[
-//     {
-//         ingredientLabel:'Salad',
-//         ingredientType:'salad'
-//     },
-//     {
-//         ingredientLabel:'Meat',
-//         ingredientType:'meat'
-//     },
-//     {
-//         ingredientLabel:'Bacon',
-//         ingredientType:'bacon'
-//     },
-//     {
-//         ingredientLabel:'Cheese',
-//         ingredientType:'cheese'
-//     },
-// ]
+const buildControlsWithRouter=withRouter(buildControls)
+export default connect(mapStateToProps)(buildControlsWithRouter);
