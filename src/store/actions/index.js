@@ -8,3 +8,7 @@ export {
     showCheckout,
     fetchOrdersReq
 } from './ordersActions.js';
+export {
+    authReq,
+    clearAuthError
+} from './authActions.js'

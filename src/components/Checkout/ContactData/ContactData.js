@@ -34,19 +34,22 @@ class ContactData extends React.Component{
             value:'fastest'
         }
     }
-    isFormValid(){
+    checkInputsAreValid(){
         for (let inputElementName in this.state){
             const inputElement=this.state[inputElementName]
             const isInput=inputElement.hasOwnProperty('ref')
-            if (!isInput) continue;
-            const inputElementDOM = inputElement.ref.current;
+            if (!isInput) continue; //skip the select deliveryMethod since it cannot be invalid
+            const inputElementDOM = inputElement.ref.current; //get reference to actual dom element
             if (inputElementDOM.checkValidity())
                 continue;
+            //Add invalid class to invalid dom input element
             inputElement.ref.current.classList.add(InputClasses.InputElementInvalid)
         }
-        if (!this.contactDataFormRef.current.reportValidity())
-            return false;
-        return true;
+    }
+    isFormValid(){
+        this.checkInputsAreValid();
+        const contactDataFormDOMElement=this.contactDataFormRef.current;
+        return contactDataFormDOMElement.reportValidity() //shows default html text on screen, if invalid
     }
     saveOrder(){
         const orderToSave={
@@ -62,6 +65,16 @@ class ContactData extends React.Component{
         }
         this.props.dispatchPurchaseBurgerReq(orderToSave);
     }
+    removeInvalidClass(contactOrderDataToAssign){
+        //contactOrderDataToAssign is for eg email,phone...
+        const inputElementRef = this.state[contactOrderDataToAssign].ref;
+        if (!inputElementRef)
+            return //not deliveryMethod
+        const inputElementDom=inputElementRef.current;
+        const isElementMarkedInvalid=inputElementDom.classList.contains(InputClasses.InputElementInvalid)
+        if (inputElementDom.checkValidity() && isElementMarkedInvalid)
+            inputElementDom.classList.remove(InputClasses.InputElementInvalid)
+    }
     orderHandler(event){
         event.preventDefault();
         if (this.isFormValid())
@@ -73,14 +86,7 @@ class ContactData extends React.Component{
                 ...this.state[contactOrderDataToAssign],
                 value:event.target.value
             }
-        },()=>{
-            const inputElementRef = this.state[contactOrderDataToAssign].ref;
-            if (!inputElementRef)
-                return
-            const inputElementDom=inputElementRef.current;
-            if (inputElementDom.checkValidity() && inputElementDom.classList.contains(InputClasses.InputElementInvalid))
-                inputElementDom.classList.remove(InputClasses.InputElementInvalid)
-        })
+        },this.removeInvalidClass.bind(this,contactOrderDataToAssign))
         
     }
     render(){
