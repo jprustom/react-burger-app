@@ -55,8 +55,8 @@ export function authReq(email,password,authMode){
             returnSecureToken:true
         }
         const authPostUrl=authMode==='signUp'
-            ?'https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyC87-aMf24BgnY4QwVtnVaUe1u2mhEs08I'
-            :'https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyC87-aMf24BgnY4QwVtnVaUe1u2mhEs08I'
+            ?`https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=${process.env.REACT_APP_FIREBASE_API_KEY}`
+            :`https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=A${process.env.REACT_APP_FIREBASE_API_KEY}`
         axios.post(authPostUrl,authPostBody)
             .then(function(response){
                 const {localId: userId,idToken: userToken,expiresIn: userTokenExpiresIn,refreshToken}=response.data;
