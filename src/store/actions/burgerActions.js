@@ -29,10 +29,8 @@ const initBurgerFetchError=function(error){
 }
 export const initBurgerFetch=()=>{
     return dispatch=>{
-        console.log('fetching burger')
         axios.get('/burgerBuilderInit.json')
             .then((response)=>{
-                console.log('fetched burger')
                 dispatch(initBurger(response.data))
 
                 })

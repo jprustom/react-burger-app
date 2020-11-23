@@ -10,7 +10,6 @@ function generateInputElement(props){
     delete propsToAssociate.inputRef
     switch (inputType){
         case 'textarea':
-            console.log(...propsToAssociate)
             return <textarea {...propsToAssociate}/>
         case 'input':
             return <input ref={refToAssign} className={InputClasses.InputElement} {...propsToAssociate}/>

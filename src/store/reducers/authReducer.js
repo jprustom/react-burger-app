@@ -1,7 +1,15 @@
 import * as actionTypes from '../actions/actionsTypes.js'
+
+const locallyStoredUserToken=localStorage.getItem('userToken');
+const locallyStoredUserTokenExpirationDate=localStorage.getItem('userTokenExpirationDate');
+const userToken=locallyStoredUserToken
+    ?Date.now()<locallyStoredUserTokenExpirationDate
+        ?locallyStoredUserToken
+        :null
+    :null
 const authInitialState={
-    userToken:null,
-    userId:null,
+    userToken,
+    userId:localStorage.getItem('userId'),
     authErrorMessage:null,
     loadingAuth:false
 }
@@ -18,7 +26,10 @@ const authReqFail=({authErrorMessage})=>{
         authErrorMessage
     }
 }
-const authReqSuccess=({userId,userToken})=>{
+const authReqSuccess=({userId,userToken,userTokenExpirationDate})=>{
+    localStorage.setItem('userId',userId)
+    localStorage.setItem('userToken',userToken)
+    localStorage.setItem('userTokenExpirationDate',userTokenExpirationDate)
     return {
         authErrorMessage:null,
         loadingAuth:false,
@@ -32,7 +43,17 @@ const authClearError=(authOldState)=>{
         authErrorMessage:null
     }
 }
-const authLogout=()=>authInitialState
+const authLogout=()=>{
+    localStorage.removeItem('userId')
+    localStorage.removeItem('userToken')
+    localStorage.removeItem('userTokenExpirationDate')
+    return {
+        userToken:null,
+        userId:null,
+        authErrorMessage:null,
+        loadingAuth:false
+    }
+}
 function authReducer(authOldState=authInitialState,authAction){
     switch(authAction.type){
         case actionTypes.AUTH_REQ_START:

@@ -46,13 +46,11 @@ export function purchaseBurgerReq(orderToSave,userToken){
     }
 }
 function fetchOrdersStartReq(){
-    console.log('fetching orders')
     return {
         type:FETCH_ORDERS_REQ_START
     }
 }
 function fetchOrdersReqSuccess(fetchedOrders){
-    console.log(fetchedOrders)
     return {
         fetchedOrders,
         type:FETCH_ORDERS_REQ_SUCCESS
@@ -71,9 +69,11 @@ export function fetchOrdersReq(userToken){
             .then((response)=>{
                 const fetchedOrders=[]
                 for (let orderId in response.data){
+                    const orderData=response.data[orderId]
+                    if (orderData['contactDetails']['userId']!==localStorage.getItem('userId'))
+                        continue;
                     fetchedOrders.push({
-                        orderId,
-                        ...response.data[orderId]
+                        ...orderData
                     })
                 }
                 dispatch(fetchOrdersReqSuccess(fetchedOrders))

@@ -34,7 +34,6 @@ class BurgerBuilder extends Component{
         this.props.dispatchInitBurger();
     }
     render(){
-        console.log(this.props)
         return (
             this.props.burgerIngredientsMap
                 ?   <React.Fragment>

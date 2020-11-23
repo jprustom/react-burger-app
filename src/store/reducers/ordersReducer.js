@@ -15,7 +15,6 @@ function purchaseBurgerSuccess(ordersOldState,savedOrder){
     }
 }
 function startBurgerReq(ordersOldState){
-    console.log('starting request')
     return {
         ...ordersOldState,
         processingOrder:true,
@@ -52,7 +51,6 @@ function fetchOrdersReqSuccess(ordersOldState,fetchedOrders){
     }
 }
 function fetchOrdersReqFail(fetchedOrdersError){
-    console.log(fetchedOrdersError)
     return ordersInitialState
 }
 function ordersReducer(ordersOldState=ordersInitialState,ordersAction){

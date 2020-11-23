@@ -60,7 +60,8 @@ class ContactData extends React.Component{
                 name:this.state.name.value,
                 email:this.state.email.value,
                 streetName:this.state.postalCode.value,
-                postalCode:this.state.streetName.value
+                postalCode:this.state.streetName.value,
+                userId:this.props.userId
             }
         }
         this.props.dispatchPurchaseBurgerReq(orderToSave,this.props.userToken);
@@ -118,12 +119,14 @@ function mapDispatchActionsToProps(dispatch){
 function mapStateToProps({burger,orders,auth}){
     const {processingOrder,orderProcessed}=orders;
     const {burgerIngredientsMap,totalPrice}=burger;
+    const {userToken,userId}=auth;
     return {
         burgerIngredientsMap,
         totalPrice,
         processingOrder,
         orderProcessed,
-        userToken:auth.userToken
+        userToken,
+        userId
     }
 }
 const contactDataWithRouter=withRouter(ContactData);
