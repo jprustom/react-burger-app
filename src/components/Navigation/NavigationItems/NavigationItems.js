@@ -4,7 +4,7 @@ import NavigationItem from './NavigationItem/NavigationItem.js';
 import {connect} from 'react-redux';
 
 
-const navigationItems=props=>(
+export const navigationItems=props=>(
     <nav>
         <ul className={NavigationItemsClasses.NavigationItems}>
         <NavigationItem exact navigationItemLink="/" >Burger Builder</NavigationItem>
